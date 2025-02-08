@@ -18,5 +18,4 @@ func main() {
 	for sc.Scan() {
 		fmt.Println(sc.Text())
 	}
-
 }
