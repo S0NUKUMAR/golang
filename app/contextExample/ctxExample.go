@@ -9,31 +9,23 @@ import (
 func main(){
 	ctx,cancel:= context.WithTimeout(context.Background(), time.Second * 5)
 	defer cancel()
-	t := clock(ctx)
-	fmt.Println("time::", time.Now().Format("15:04:03"))
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case tick:= <-t :
-			fmt.Println(tick)
-		}
+	t := make(chan time.Time)
+	ticker:= time.NewTicker(time.Second * 1)
+	go clock(ctx,t,ticker)
+	for i := range t {
+			fmt.Println(i)
 	}
 }
 
-func clock(ctx context.Context) <-chan time.Time {
-	ticker:= time.NewTicker(time.Second * 1)
-	t := make(chan time.Time)
-	go func() {
-		defer close(t)
+func clock(ctx context.Context, tm chan<- time.Time, ticker *time.Ticker) {
+		defer close(tm)
 		for {
 			select{
 			case <-ctx.Done():
 				ticker.Stop()
 				return
-			case tm:= <-ticker.C:
-				t <-tm
+			case t:= <-ticker.C:
+				tm <-t
 			}
-		}}() 
-		return t
 	}
+}

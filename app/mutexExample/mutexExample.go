@@ -5,21 +5,7 @@ import (
 	"sync"
 )
 
-const (
-	Monday = iota;
-	Tuesday
-	WednesDay
-	ThrusDay
-	Friday
-	Saturday
-	Sunday
-)
 
-const (
-	a = 1
-	b
-	c
-)
 var mu sync.Mutex
 var val int = 0
 var wg sync.WaitGroup
@@ -37,6 +23,7 @@ func main() {
 		val--;
 		defer wg.Done()
 	}
+
 	for i:=0 ; i < 10000000 ; i++ {
 		wg.Add(2)
 		go increment()
@@ -44,8 +31,5 @@ func main() {
 	}
 
 	wg.Wait()
-	fmt.Println("shi")
 	fmt.Println("this is the final value", val)
-	fmt.Println(Monday, Tuesday, WednesDay, Friday, ThrusDay, Saturday, Sunday)
-	fmt.Println(a,b,c)
 }
